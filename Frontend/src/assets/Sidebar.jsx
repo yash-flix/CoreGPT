@@ -91,8 +91,9 @@ function Sidebar()
                 {
                     allthreads?.map((thread, idx)=>
                     (
-                        <li key={idx} onClick={()=>changeThread(thread.threadId)}>{thread.title}
-                        <i className="fa-regular fa-trash-can" onClick={(e)=>
+                        <li key={idx} onClick={()=>changeThread(thread.threadId)}
+                        className={thread.threadId === currThreadId ? "highlighted" : ""}>{thread.title}
+                        <i className="fa-regular fa-trash-can " onClick={(e)=>
                             { e.stopPropagation()
                                 deleteThread(thread.threadId);
                             }
