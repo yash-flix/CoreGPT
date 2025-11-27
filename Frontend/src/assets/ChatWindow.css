@@ -101,12 +101,12 @@ input:focus {
 
 .dropDown {
     position: absolute;
-    top: 4rem;
+    top: 3rem;
     right: 4rem;
     width: 150px;
 
     background-color: #323232;
-    padding: 0.3rem 0.5rem;
+    padding: 0.2rem 0.4rem;
     border-radius: 6px;
     text-align: left;
     z-index: 1000;
