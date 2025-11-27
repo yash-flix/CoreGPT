@@ -11,6 +11,11 @@ function Chat()
     const [latestReply , setLatestReply] = useState(null)
 
     useEffect(()=>{
+        if(reply === null)
+        {
+            setLatestReply(null);
+            return;
+        }
         if(!prevChats.length) return;
          const content = reply.split("");
 
@@ -27,7 +32,7 @@ function Chat()
 
     }, [prevChats , reply])
     return <>
-    {newChat && <h1>Start a New Chat!</h1>}
+    {newChat && <h1>Start a New Chat!</h1>} 
     <div className="chats">
         {
             prevChats?.slice(0,-1).map((chat ,idx)=>
@@ -41,12 +46,32 @@ function Chat()
                 </div>
             )
         }
+
         {
+            prevChats.length > 0 && (
+            <>
+            {
+                latestReply === null ? (<div className="gptDiv" key={"non-typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
+            </div>) : (<div className="gptDiv" key={"typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{latestReply}</ReactMarkdown>
+            </div>)
+            }
+            </>
+            )
+        }
+        {/* {
             prevChats.length >0 && latestReply !=null && 
             <div className="gptDiv" key={"typing"}>
                 <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{latestReply}</ReactMarkdown>
             </div>
         }
+        {
+            prevChats.length >0 && latestReply ===null && 
+            <div className="gptDiv" key={"non-typing"}>
+                <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{prevChats[prevChats.length-1].content}</ReactMarkdown>
+            </div>
+        } */}
        
 
     </div>

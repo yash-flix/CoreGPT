@@ -2,11 +2,12 @@
 import "./Sidebar.css"
 import { MyContext } from "../MyContext";
 import { useContext , useEffect } from "react";
+import {v1 as uuidv1} from "uuid" ;
 
 
 function Sidebar()
 {
-    const {allthreads , setAllThreads ,currThreadId } = useContext(MyContext);
+    const {allthreads , setAllThreads ,currThreadId , setCurrThreadId , setNewChat , setPrompt , setReply , setPrevChats} = useContext(MyContext);
 
     const getAllThreads = async ()=>
     {
@@ -18,7 +19,7 @@ function Sidebar()
               
                 {threadId: thread.threadId , title : thread.messages[0].content}
             ))
-            console.log(filteredData);
+            // console.log(filteredData);
             setAllThreads(filteredData);
             
         } catch (error) {
@@ -31,10 +32,37 @@ function Sidebar()
         getAllThreads();
 
     }, [currThreadId])
+
+    const createNewChat = async()=>
+    {
+        setNewChat(true);
+        setPrompt("");
+        setReply(null);
+        setCurrThreadId(uuidv1());
+        setPrevChats([]);
+
+    }
+    const changeThread = async(newThreadId)=>
+    {
+        setCurrThreadId(newThreadId);
+        try {
+            const response = await fetch(`http://localhost:8000/api/thread/${newThreadId}`);
+            const res = await response.json();
+            console.log(res);
+            setPrevChats(res);
+            setNewChat(false);
+            setReply(null);
+            
+        } catch (error) {
+            console.log(error)
+        }
+
+
+    }
     return (
         <section className="sidebar">
           
-            <button>
+            <button onClick={createNewChat}>
             <img className="logo" src="src/assets/blacklogo.png" alt="gpt logo"></img>
            
             <span><i className="fa-solid fa-pen-to-square "></i></span>
@@ -45,7 +73,7 @@ function Sidebar()
                 {
                     allthreads?.map((thread, idx)=>
                     (
-                        <li key={idx}>{thread.title}</li>
+                        <li key={idx} onClick={()=>changeThread(thread.threadId)}>{thread.title}</li>
                     ))
                 }
                 
